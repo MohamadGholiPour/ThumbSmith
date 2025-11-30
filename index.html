@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ThumbSmith AI - High Impact Thumbnails</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=Lalezar&family=Rubik:wght@400;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=El+Messiri:wght@400;700&family=Changa:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --font-sans: 'Inter', sans-serif;
+        --font-persian: 'Vazirmatn', sans-serif;
+      }
+      body {
+        font-family: var(--font-sans);
+        background-color: #020617; /* Slate 950 */
+        color: #e2e8f0;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* Persian Font Override with !important to ensure it applies */
+      body[dir="rtl"], [dir="rtl"] {
+        font-family: var(--font-persian) !important;
+      }
+      
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569; 
+      }
+
+      /* Animations */
+      @keyframes liquid-fill {
+        0% { transform: translateY(100%); }
+        100% { transform: translateY(0%); }
+      }
+      .liquid-fill-anim {
+        animation: liquid-fill 2s ease-in-out forwards;
+      }
+
+      @keyframes aurora-1 {
+        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+        50% { transform: translate(20px, -20px) scale(1.1); opacity: 0.4; }
+      }
+      @keyframes aurora-2 {
+        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+        50% { transform: translate(-20px, 20px) scale(1.2); opacity: 0.4; }
+      }
+      .animate-aurora-1 { animation: aurora-1 10s ease-in-out infinite alternate; }
+      .animate-aurora-2 { animation: aurora-2 15s ease-in-out infinite alternate; }
+
+      .pattern-grid-lg {
+        background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      .text-effect-glow { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(99, 102, 241, 0.5); }
+      .text-effect-outline { -webkit-text-stroke: 1px white; color: transparent; }
+      .text-effect-3d { text-shadow: 2px 2px 0px #4f46e5; }
+      .text-effect-shadow { text-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
