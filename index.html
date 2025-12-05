@@ -1,71 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ThumbSmith AI - High Impact Thumbnails</title>
+    <title>ThumbSmith AI - Next Gen Thumbnails</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=Lalezar&family=Rubik:wght@400;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=El+Messiri:wght@400;700&family=Changa:wght@400;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              persian: ['"Vazirmatn"', 'sans-serif'],
+            },
+            colors: {
+              background: '#030712', // Slate 950 base
+              surface: '#0f172a',
+              primary: '#6366f1', // Indigo 500
+              secondary: '#10b981', // Emerald 500
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'float 6s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
     <style>
       :root {
-        --font-sans: 'Inter', sans-serif;
+        --font-sans: 'Plus Jakarta Sans', sans-serif;
         --font-persian: 'Vazirmatn', sans-serif;
       }
       body {
         font-family: var(--font-sans);
-        background-color: #020617; /* Slate 950 */
+        background-color: #030712;
         color: #e2e8f0;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
-      /* Persian Font Override with !important to ensure it applies */
+      /* Persian Font Override */
       body[dir="rtl"], [dir="rtl"] {
         font-family: var(--font-persian) !important;
       }
       
-      /* Custom Scrollbar */
+      /* Modern Scrollbar */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #0f172a; 
+        background: transparent; 
       }
       ::-webkit-scrollbar-thumb {
         background: #334155; 
-        border-radius: 4px;
+        border-radius: 10px;
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #475569; 
       }
 
-      /* Animations */
-      @keyframes liquid-fill {
-        0% { transform: translateY(100%); }
-        100% { transform: translateY(0%); }
+      /* Utilities */
+      .glass-panel {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
       }
-      .liquid-fill-anim {
-        animation: liquid-fill 2s ease-in-out forwards;
-      }
-
-      @keyframes aurora-1 {
-        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
-        50% { transform: translate(20px, -20px) scale(1.1); opacity: 0.4; }
-      }
-      @keyframes aurora-2 {
-        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
-        50% { transform: translate(-20px, 20px) scale(1.2); opacity: 0.4; }
-      }
-      .animate-aurora-1 { animation: aurora-1 10s ease-in-out infinite alternate; }
-      .animate-aurora-2 { animation: aurora-2 15s ease-in-out infinite alternate; }
-
-      .pattern-grid-lg {
-        background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                          linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-        background-size: 40px 40px;
+      
+      .glass-card {
+        background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
       }
 
-      .text-effect-glow { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(99, 102, 241, 0.5); }
+      .text-glow {
+        text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+      }
+
+      .noise-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* Specific Text Effects */
       .text-effect-outline { -webkit-text-stroke: 1px white; color: transparent; }
       .text-effect-3d { text-shadow: 2px 2px 0px #4f46e5; }
       .text-effect-shadow { text-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
@@ -83,6 +117,7 @@
 </script>
 </head>
   <body>
+    <div class="noise-bg"></div>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

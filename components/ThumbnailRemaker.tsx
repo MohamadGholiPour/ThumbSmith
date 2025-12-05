@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { improveThumbnailConcept, generateThumbnailImage } from '../services/geminiService';
-import { Loader2, Upload, Wand2, Sparkles, AlertCircle, PlayCircle, ArrowRight, RefreshCw, Save, Sliders, Zap } from 'lucide-react';
+import { Loader2, Upload, Wand2, Sparkles, AlertCircle, PlayCircle, RefreshCw, Save, Sliders, Zap } from 'lucide-react';
 import { translations } from '../utils/translations';
 import { AspectRatio, Language } from '../types';
 
@@ -64,125 +64,111 @@ const ThumbnailRemaker: React.FC<Props> = ({ language }) => {
   return (
     <div className="max-w-6xl mx-auto pb-20 space-y-8">
       
-      {/* 1. UPLOAD SECTION */}
-      <div className="bg-[#0f172a]/60 border border-slate-800/60 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl">
-        {!preview ? (
-            <div 
-              className="border-2 border-dashed border-slate-700/50 rounded-2xl p-16 hover:border-indigo-500 hover:bg-slate-800/30 transition-all cursor-pointer group flex flex-col items-center justify-center text-center"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-xl shadow-black/20 group-hover:shadow-indigo-500/20">
-                <Upload className="w-8 h-8 text-slate-400 group-hover:text-indigo-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">{t.uploadTitle}</h3>
-              <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
-                {t.remakeDesc}
-              </p>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                className="hidden" 
-                accept="image/*" 
-                onChange={handleFileChange}
-              />
+      {!preview ? (
+         <div className="glass-panel rounded-3xl p-16 text-center border-dashed border-2 border-white/10 hover:border-indigo-500/50 transition-all group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+            <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-6 transition-transform">
+               <Upload className="w-8 h-8 text-slate-300 group-hover:text-indigo-400 transition-colors" />
             </div>
-        ) : (
-          <div className="flex flex-col lg:flex-row gap-8 items-start">
-             {/* Left Column: Input */}
-             <div className="w-full lg:w-1/3 space-y-4">
-                 <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-slate-700 shadow-xl group">
-                    <img src={preview} alt="Original" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute top-3 left-3 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-wider">{t.original}</div>
-                    <button 
-                      onClick={() => { setFile(null); setPreview(null); setAnalysisResult(null); setGeneratedImage(null); }}
-                      className="absolute top-3 right-3 bg-red-500/80 hover:bg-red-500 text-white p-1 rounded-full transition-colors"
-                    >
-                      <RefreshCw className="w-3.5 h-3.5" />
-                    </button>
-                 </div>
+            <h2 className="text-2xl font-bold text-white mb-2">{t.uploadTitle}</h2>
+            <p className="text-slate-400">{t.remakeDesc}</p>
+            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+         </div>
+      ) : (
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* Left: Original & Controls */}
+            <div className="lg:col-span-5 space-y-6">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
+                   <img src={preview} alt="Original" className="w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                   <div className="absolute top-4 left-4 bg-black/60 px-3 py-1 rounded-full text-[10px] font-bold text-white backdrop-blur uppercase tracking-wider">{t.original}</div>
+                   <button 
+                     onClick={() => { setFile(null); setPreview(null); setAnalysisResult(null); setGeneratedImage(null); }}
+                     className="absolute top-4 right-4 bg-white/10 hover:bg-red-500 text-white p-1.5 rounded-full transition-colors backdrop-blur"
+                   >
+                     <RefreshCw className="w-4 h-4" />
+                   </button>
+                </div>
 
-                 {!analysisResult && (
-                   <div className="bg-slate-900/50 p-5 rounded-xl border border-white/5 space-y-4">
-                      <div className="flex items-center gap-2 text-sm font-bold text-slate-300">
+                {!analysisResult && (
+                   <div className="glass-panel p-6 rounded-3xl space-y-6">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-2">
                          <Sliders className="w-4 h-4" /> {t.creativityLevel}
                       </div>
-                      <div className="grid grid-cols-1 gap-2">
+                      <div className="space-y-3">
                         {creativityOptions.map(opt => (
                            <button
                              key={opt.id}
                              onClick={() => setCreativityLevel(opt.id)}
-                             className={`text-left px-4 py-3 rounded-lg border transition-all ${creativityLevel === opt.id ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-600'}`}
+                             className={`w-full text-left px-5 py-4 rounded-xl border transition-all ${creativityLevel === opt.id ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-white/5 border-transparent text-slate-400 hover:bg-white/10'}`}
                            >
                               <div className="text-sm font-bold">{opt.label}</div>
-                              <div className="text-[10px] opacity-70">{opt.desc}</div>
+                              <div className="text-xs opacity-70 mt-0.5">{opt.desc}</div>
                            </button>
                         ))}
                       </div>
                       <button
                         onClick={handleAnalyze}
                         disabled={isAnalyzing}
-                        className="w-full bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all"
+                        className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all"
                       >
-                        {isAnalyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                        {isAnalyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 text-indigo-600" />}
                         <span>{isAnalyzing ? t.analyzing : "Critique & Improve"}</span>
                       </button>
                    </div>
-                 )}
-             </div>
+                )}
+            </div>
 
-             {/* Right Column: Result */}
-             <div className="flex-1 w-full">
-                {!analysisResult ? (
-                  <div className="h-full min-h-[300px] border-2 border-dashed border-slate-800 rounded-2xl flex flex-col items-center justify-center text-slate-600 space-y-4">
-                     <Wand2 className="w-16 h-16 opacity-10" />
-                     <p>{t.uploadDesc}</p>
+            {/* Right: Analysis & Result */}
+            <div className="lg:col-span-7">
+               {!analysisResult ? (
+                  <div className="h-full glass-panel rounded-3xl border-dashed border-2 border-white/5 flex flex-col items-center justify-center text-slate-600 p-12 min-h-[400px]">
+                     <Wand2 className="w-12 h-12 opacity-20 mb-4" />
+                     <p className="text-sm">Analysis results will appear here</p>
                   </div>
-                ) : (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                     {/* Critique Box */}
-                     <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 backdrop-blur-sm">
-                        <h4 className="flex items-center gap-2 text-red-400 font-bold text-sm uppercase tracking-wider mb-2">
+               ) : (
+                  <div className="space-y-6 animate-[slide-in-from-right_0.5s_ease-out]">
+                     {/* Critique */}
+                     <div className="glass-card p-6 rounded-2xl border-l-4 border-l-red-500">
+                        <h4 className="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider mb-2">
                            <AlertCircle className="w-4 h-4" /> {t.critique}
                         </h4>
-                        <p className="text-red-100/90 text-sm leading-relaxed">{analysisResult.critique}</p>
+                        <p className="text-slate-300 text-sm leading-relaxed">{analysisResult.critique}</p>
                      </div>
 
-                     {/* Improved Prompt Box */}
-                     <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 relative backdrop-blur-sm">
-                        <h4 className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase tracking-wider mb-2">
+                     {/* Concept */}
+                     <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500">
+                        <h4 className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider mb-2">
                            <Zap className="w-4 h-4" /> {t.improvedPrompt}
                         </h4>
-                        <p className="text-emerald-100/90 text-sm leading-relaxed font-mono">{analysisResult.improvedPrompt}</p>
+                        <p className="text-slate-300 text-sm leading-relaxed font-mono bg-black/30 p-4 rounded-lg">{analysisResult.improvedPrompt}</p>
                      </div>
 
                      {!generatedImage ? (
                         <button
                            onClick={handleGenerateRemake}
                            disabled={isGenerating}
-                           className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-5 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 relative overflow-hidden group border-t border-emerald-400/30"
+                           className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-6 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3"
                         >
-                           {isGenerating ? <Loader2 className="w-6 h-6 animate-spin" /> : <PlayCircle className="w-6 h-6 fill-current text-white/20" />}
+                           {isGenerating ? <Loader2 className="w-6 h-6 animate-spin" /> : <PlayCircle className="w-6 h-6" />}
                            <span className="text-lg">{isGenerating ? t.generatingImage : t.visualizeRemake}</span>
                         </button>
                      ) : (
-                        <div className="mt-8 animate-in zoom-in-95 duration-500">
-                           <h3 className="text-center text-lg font-bold text-white mb-4 flex items-center justify-center gap-3">
-                              <span className="text-emerald-400 uppercase tracking-widest">{t.remake}</span>
-                           </h3>
-                           <div className="relative aspect-video rounded-2xl overflow-hidden border border-emerald-500/50 shadow-[0_0_50px_rgba(16,185,129,0.2)] group">
-                              <img src={generatedImage} className="w-full h-full object-cover" alt="After" />
-                              <a href={generatedImage} download="remake.png" className="absolute top-4 right-4 bg-black/60 hover:bg-black/90 text-white p-2.5 rounded-xl opacity-0 group-hover:opacity-100 transition-all backdrop-blur">
+                        <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-emerald-500/30 group animate-[zoom-in_0.5s]">
+                           <div className="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-lg z-10">{t.remake}</div>
+                           <img src={generatedImage} className="w-full h-full object-cover" alt="Remake" />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-end p-6">
+                              <a href={generatedImage} download="remake.png" className="bg-white text-black p-3 rounded-xl hover:scale-110 transition-transform">
                                  <Save className="w-5 h-5" />
                               </a>
                            </div>
                         </div>
                      )}
                   </div>
-                )}
-             </div>
-          </div>
-        )}
-      </div>
+               )}
+            </div>
+         </div>
+      )}
+
     </div>
   );
 };

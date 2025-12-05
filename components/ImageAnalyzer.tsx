@@ -56,104 +56,79 @@ const ImageAnalyzer: React.FC<Props> = ({ onPromptExtracted, language }) => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-[#0f172a]/60 border border-slate-800/60 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none"></div>
-
-        {!preview ? (
-            <div 
-              className="border-2 border-dashed border-slate-700/50 rounded-2xl p-16 hover:border-indigo-500 hover:bg-slate-800/30 transition-all cursor-pointer group flex flex-col items-center justify-center text-center"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <div className="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-xl shadow-black/20 group-hover:shadow-indigo-500/20">
-                <Upload className="w-8 h-8 text-slate-400 group-hover:text-indigo-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">{t.uploadTitle}</h3>
-              <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
-                {t.uploadDesc}
-              </p>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                className="hidden" 
-                accept="image/*" 
-                onChange={handleFileChange}
-              />
-            </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-            <div className="space-y-4">
-               <div className="relative group rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
-                 <img src={preview} alt="Upload Preview" className="w-full object-cover" />
-                 <button 
-                   onClick={() => { setFile(null); setPreview(null); setResultPrompt(''); }}
-                   className="absolute top-2 right-2 bg-black/60 hover:bg-red-500 text-white p-2 rounded-full backdrop-blur transition-all"
-                 >
-                   <ScanEye className="w-4 h-4" />
+    <div className="max-w-5xl mx-auto space-y-8">
+      
+      {!preview ? (
+        <div className="glass-panel rounded-3xl p-12 text-center border-dashed border-2 border-white/10 hover:border-indigo-500/50 transition-all group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+           <div className="w-24 h-24 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <Upload className="w-10 h-10 text-indigo-400" />
+           </div>
+           <h2 className="text-3xl font-bold text-white mb-3">{t.uploadTitle}</h2>
+           <p className="text-slate-400 max-w-md mx-auto">{t.uploadDesc}</p>
+           <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+           {/* Left: Control Panel */}
+           <div className="md:col-span-5 space-y-6">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
+                 <img src={preview} alt="Preview" className="w-full object-cover" />
+                 <button onClick={() => {setFile(null); setPreview(null); setResultPrompt('')}} className="absolute top-4 right-4 bg-black/60 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur hover:bg-red-500">
+                    <ScanEye className="w-4 h-4" />
                  </button>
-               </div>
-               
-               <div className="bg-slate-900/50 p-4 rounded-xl border border-white/5 space-y-3">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t.analysisMode}</label>
-                  <div className="grid grid-cols-1 gap-2">
+              </div>
+
+              <div className="glass-panel p-5 rounded-2xl space-y-4">
+                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{t.analysisMode}</label>
+                 <div className="space-y-2">
                     {focusOptions.map(opt => (
                        <button
                          key={opt.id}
                          onClick={() => setFocusMode(opt.id)}
-                         className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ${focusMode === opt.id ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-950 text-slate-400 hover:bg-slate-800'}`}
+                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${focusMode === opt.id ? 'bg-indigo-600 text-white shadow-lg' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
                        >
                           {opt.icon} {opt.label}
                           {focusMode === opt.id && <Check className="w-4 h-4 ml-auto" />}
                        </button>
                     ))}
-                  </div>
-               </div>
-
-               <button
+                 </div>
+                 <button
                    onClick={handleAnalyze}
                    disabled={isAnalyzing}
-                   className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50"
+                   className="w-full bg-white text-black hover:bg-slate-200 font-bold py-4 rounded-xl flex items-center justify-center gap-2 mt-4"
                  >
-                   {isAnalyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ScanEye className="w-5 h-5" />}
-                   <span>{isAnalyzing ? t.analyzing : t.reverseEngineer}</span>
-               </button>
-            </div>
-            
-            <div className="h-full flex flex-col">
+                    {isAnalyzing ? <Loader2 className="w-5 h-5 animate-spin"/> : <ScanEye className="w-5 h-5"/>}
+                    {isAnalyzing ? t.analyzing : t.reverseEngineer}
+                 </button>
+              </div>
+           </div>
+
+           {/* Right: Output */}
+           <div className="md:col-span-7">
               {resultPrompt ? (
-                 <div className="bg-slate-950/80 border border-indigo-500/30 rounded-2xl p-6 relative flex-1 animate-in fade-in slide-in-from-right-4 shadow-inner">
-                   <div className="flex items-center justify-between mb-4">
-                     <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-2">
-                        <FileText className="w-4 h-4"/> {t.extractedPrompt}
-                     </h4>
-                     <div className="flex gap-2">
-                        <button onClick={handleCopy} className="p-2 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors">
-                           {copied ? <Check className="w-4 h-4 text-green-400"/> : <Copy className="w-4 h-4"/>}
-                        </button>
-                     </div>
-                   </div>
-                   <div className="overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
-                      <p className="text-slate-300 text-sm leading-loose font-light" dir="ltr">{resultPrompt}</p>
-                   </div>
-                   <div className="pt-6 mt-4 border-t border-white/5">
-                      <button 
-                       onClick={() => onPromptExtracted(resultPrompt)}
-                       className="w-full flex items-center justify-center gap-2 text-sm font-bold bg-indigo-500/20 hover:bg-indigo-500 text-indigo-300 hover:text-white px-4 py-3 rounded-xl transition-all border border-indigo-500/30"
-                     >
-                       {t.useInGenerator} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                     </button>
-                   </div>
+                 <div className="glass-card rounded-3xl h-full flex flex-col animate-[fade-in_0.5s]">
+                    <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                       <h3 className="text-sm font-bold text-white flex items-center gap-2"><FileText className="w-4 h-4 text-indigo-400"/> {t.extractedPrompt}</h3>
+                       <button onClick={handleCopy} className="text-slate-400 hover:text-white p-2">{copied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}</button>
+                    </div>
+                    <div className="p-8 flex-1">
+                       <p className="text-slate-300 leading-relaxed font-light whitespace-pre-wrap">{resultPrompt}</p>
+                    </div>
+                    <div className="p-6 border-t border-white/5">
+                       <button onClick={() => onPromptExtracted(resultPrompt)} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
+                          {t.useInGenerator} <ArrowRight className="w-4 h-4 rtl:rotate-180"/>
+                       </button>
+                    </div>
                  </div>
               ) : (
-                 <div className="flex-1 border border-dashed border-slate-800 rounded-2xl flex flex-col items-center justify-center text-slate-600 p-8 min-h-[300px]">
-                    <ImageIcon className="w-12 h-12 opacity-20 mb-4" />
-                    <p className="text-sm">{t.uploadDesc}</p>
+                 <div className="h-full glass-panel rounded-3xl flex flex-col items-center justify-center text-slate-600 p-8 border-dashed border-2 border-white/5">
+                    <ScanEye className="w-16 h-16 opacity-20 mb-4" />
+                    <p className="text-sm font-medium">Analysis results will appear here</p>
                  </div>
               )}
-            </div>
-          </div>
-        )}
-      </div>
+           </div>
+        </div>
+      )}
     </div>
   );
 };
